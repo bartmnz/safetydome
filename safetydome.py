@@ -54,9 +54,9 @@ def combatant(combatant_id=None):
         ' combatant, ' +\
         ' species ' +\
         'WHERE ' +\
-        " combatant.id = '" + str(combatant_id) + "' AND " +\
+        " combatant.id = %s AND " +\
         ' species.id = combatant.species_id;'
-    cursor.execute(querry)
+    cursor.execute(querry, combatant_id) # use %s for no can has SQL injection
     results = cursor.fetchall()
     output = []
     for data in results:
@@ -151,7 +151,8 @@ def battles(battle_id=None, id1=None, id2=None):
             'FROM ' +\
             ' fight ' +\
             'WHERE ' +\
-            ' fight.id = ' + str(battle_id) + ';'
+            ' fight.id = %s;'
+            cursor.execute(querry, battle_id) #no SQL injection
     elif(id1 and id2):
         querry = 'SELECT ' +\
             'fight.winner, ' +\
@@ -167,9 +168,9 @@ def battles(battle_id=None, id1=None, id2=None):
             'FROM ' +\
             ' fight ' +\
             'WHERE ' +\
-            ' combatant_one = ' + str(id1) + ' AND ' +\
-            ' combatant_two = ' + str(id2) + ';'
-    cursor.execute(querry)
+            ' combatant_one = $s AND ' +\
+            ' combatant_two = %s;'
+            cursor.execute(querry, id1, id2) #no SQL injection
     results = cursor.fetchall()
     info = fight(results[0])
     fights = [info]
