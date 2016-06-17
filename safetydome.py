@@ -20,6 +20,48 @@ def combatant(name = None):
     con, cursor = connect()
 #    TODO
 
+@app.route('/battle/<battle_id>')
+def battles(battle_id = None):
+    con, cursor = connect()
+    
+    class fight():
+        def __init__(self, args):
+            self.one_id = args[1]
+            self.two_id = args[2]
+            self.one_name = args[3]
+            self.two_name = args[4]
+            self.winner = 'Tie'
+            if str(args[0]) == 'One':
+                self.winner = self.one_name
+            elif str(args[0]) == 'Two':
+                self.winner = self.two_name
+            self.fight_id = args[5]
+            self.start = args[6]
+            self.end = args[7]
+    querry = 'SELECT ' +\
+        'fight.winner, ' +\
+        'combatant_one, ' +\
+        'combatant_two, ' +\
+        '(SELECT name FROM combatant ' +\
+        'WHERE fight.combatant_one = combatant.id), ' +\
+        '(SELECT name FROM combatant ' +\
+        'WHERE fight.combatant_two = combatant.id), ' +\
+        'fight.id, ' +\
+        'fight.start, ' +\
+        'fight.finish ' +\
+        'FROM ' +\
+        'fight '+\
+        'WHERE ' +\
+        'fight.id = ' + str(battle_id) + ';'
+    cursor.execute(querry)
+    results = cursor.fetchall()
+    info = fight(results[0])
+    fights = [info]
+            
+    con.commit()
+    con.close()
+    return render_template('battle_id.html', fights=fights)
+
 @app.route('/battle')
 def battle(name = None):
     con, cursor = connect()
@@ -35,7 +77,7 @@ def battle(name = None):
                 self.winner = self.one_name
             elif str(args[0]) == 'Two':
                 self.winner = self.two_name
-            fight_id = args[5]
+            self.fight_id = args[5]
     querry = 'SELECT ' +\
         'fight.winner, ' +\
         'combatant_one, ' +\
