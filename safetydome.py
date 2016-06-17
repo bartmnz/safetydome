@@ -15,7 +15,6 @@ def index():
     return render_template('index.html')
 
 @app.route('/combatant/<combatant_id>')
-@app.route('/combatant/')
 def combatant(combatant_id = None):
     con, cursor = connect()
     
@@ -121,9 +120,9 @@ def results():
     
 #    TODO
 
-#TODO -- /battle /<id>-<id>
+@app.route('/battle/<id1>-<id2>')
 @app.route('/battle/<battle_id>')
-def battles(battle_id = None):
+def battles(battle_id = None, id1 = None, id2 = None):
     con, cursor = connect()
     
     class fight():
@@ -140,21 +139,39 @@ def battles(battle_id = None):
             self.fight_id = args[5]
             self.start = args[6]
             self.end = args[7]
-    querry = 'SELECT ' +\
-        'fight.winner, ' +\
-        'combatant_one, ' +\
-        'combatant_two, ' +\
-        '(SELECT name FROM combatant ' +\
-        'WHERE fight.combatant_one = combatant.id), ' +\
-        '(SELECT name FROM combatant ' +\
-        'WHERE fight.combatant_two = combatant.id), ' +\
-        'fight.id, ' +\
-        'fight.start, ' +\
-        'fight.finish ' +\
-        'FROM ' +\
-        'fight '+\
-        'WHERE ' +\
-        'fight.id = ' + str(battle_id) + ';'
+    if( battle_id ):
+        querry = 'SELECT ' +\
+            'fight.winner, ' +\
+            'combatant_one, ' +\
+            'combatant_two, ' +\
+            '(SELECT name FROM combatant ' +\
+            'WHERE fight.combatant_one = combatant.id), ' +\
+            '(SELECT name FROM combatant ' +\
+            'WHERE fight.combatant_two = combatant.id), ' +\
+            'fight.id, ' +\
+            'fight.start, ' +\
+            'fight.finish ' +\
+            'FROM ' +\
+            'fight '+\
+            'WHERE ' +\
+            'fight.id = ' + str(battle_id) + ';'
+    elif( id1 and id2 ):
+        querry = 'SELECT ' +\
+            'fight.winner, ' +\
+            'combatant_one, ' +\
+            'combatant_two, ' +\
+            '(SELECT name FROM combatant ' +\
+            'WHERE fight.combatant_one = combatant.id), ' +\
+            '(SELECT name FROM combatant ' +\
+            'WHERE fight.combatant_two = combatant.id), ' +\
+            'fight.id, ' +\
+            'fight.start, ' +\
+            'fight.finish ' +\
+            'FROM ' +\
+            'fight '+\
+            'WHERE ' +\
+            'combatant_one = ' + str(id1) + ' AND ' +\
+            'combatant_two = ' + str(id2) + ';'
     cursor.execute(querry)
     results = cursor.fetchall()
     info = fight(results[0])
@@ -204,7 +221,7 @@ def battle(name = None):
 #    TODO
 
 
-@app.route('/combatants')
+@app.route('/combatant/')
 def combatants():
     con, cursor = connect()
     
@@ -217,10 +234,12 @@ def combatants():
     querry = 'SELECT ' +\
         'combatant.id, combatant.name, species.name ' +\
         'FROM ' +\
-        'combatant, ' +\
-        'species ' +\
+        ' combatant, ' +\
+        ' species ' +\
         'WHERE ' +\
-        'combatant.species_id = species.id;'
+        ' combatant.species_id = species.id ' +\
+        'ORDER BY ' +\
+        ' combatant.name;'
     cursor.execute(querry)
     results = cursor.fetchall()
     combatant_list = []
