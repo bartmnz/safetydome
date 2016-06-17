@@ -14,9 +14,9 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/combatant/<name>')
+@app.route('/combatant/<combatant_id>')
 @app.route('/combatant/')
-def combatant(name = None):
+def combatant(combatant_id = None):
     con, cursor = connect()
     
     class combatant():
@@ -54,7 +54,7 @@ def combatant(name = None):
         ' combatant, ' +\
         ' species ' +\
         'WHERE ' +\
-        " combatant.name = '" + str(name) + "' AND " +\
+        " combatant.id = '" + str(combatant_id) + "' AND " +\
         ' species.id = combatant.species_id;'
     
     cursor.execute(querry)
@@ -100,7 +100,6 @@ def results():
         'WHERE ' +\
         ' fight.combatant_one = combatant.id ' +\
         'GROUP BY ' +\
-        ' combatant.name, ' +\
         ' combatant.id ' +\
         'ORDER BY ' +\
         ' count(fight.combatant_one) DESC;'
@@ -191,8 +190,7 @@ def battle(name = None):
         'WHERE fight.combatant_two = combatant.id), ' +\
         'fight.id ' +\
         'FROM ' +\
-        'fight, '+\
-        'combatant;'
+        'fight;'
     cursor.execute(querry)
     results = cursor.fetchall()
     battle_list = []
