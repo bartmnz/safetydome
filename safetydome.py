@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Hi there '
+    return render_template('index.html')
 
 @app.route('/combatant/<name>')
 @app.route('/combatant/')
@@ -222,10 +222,11 @@ def combatants():
         'combatant, ' +\
         'species ' +\
         'WHERE ' +\
-        'combatant.species_id = species_id;'
+        'combatant.species_id = species.id;'
     cursor.execute(querry)
     results = cursor.fetchall()
     combatant_list = []
+    print( results)
     
     for guy in results:
         new_guy = combatant(guy)
