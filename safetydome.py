@@ -20,6 +20,60 @@ def combatant(name = None):
     con, cursor = connect()
 #    TODO
 
+@app.route('/results/')
+def results():
+    con, cursor = connect()
+    
+    class result():
+        def __init__(self, rank, args):
+            self.rank = rank
+            self.name = args[0]
+            self.id = args[1]
+            self.wins = args[2]
+    querry = 'SELECT ' +\
+        'combatant.name, ' +\
+        'combatant.id, ' +\
+        'count(fight.combatant_one) ' +\
+        'FROM ' +\
+        ' (SELECT ' +\
+        '   fight.combatant_one '+\
+        '  FROM ' +\
+        '   public.fight ' +\
+        '  WHERE ' +\
+        "   fight.winner = 'One' " +\
+        '  Union ALL ' +\
+        '  SELECT ' +\
+        '   fight.combatant_two ' +\
+        '  FROM ' +\
+        '   public.fight '+\
+        '  WHERE ' +\
+        "   fight.winner = 'Two') as fight, " +\
+        ' combatant ' +\
+        'WHERE ' +\
+        ' fight.combatant_one = combatant.id ' +\
+        'GROUP BY ' +\
+        ' combatant.name, ' +\
+        ' combatant.id ' +\
+        'ORDER BY ' +\
+        ' count(fight.combatant_one) DESC;'
+    
+    cursor.execute(querry)
+    results = cursor.fetchall()
+    output = []
+    rank = 1
+    print( results )
+    for data in results:
+        info = result(str(rank), data)
+        output.append(info)
+        rank += 1
+    print (output)
+    con.commit()
+    con.close()
+    return render_template('results.html', combatants=output)
+    
+    
+#    TODO
+
 @app.route('/battle/<battle_id>')
 def battles(battle_id = None):
     con, cursor = connect()
