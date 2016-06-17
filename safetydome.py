@@ -16,13 +16,53 @@ def index():
 
 @app.route('/combatant/<name>')
 @app.route('/combatant/')
-def combatants(name = None):
+def combatant(name = None):
     con, cursor = connect()
 #    TODO
 
 @app.route('/battle')
 def battle(name = None):
     con, cursor = connect()
+    
+    class fight():
+        one_id = None
+        one_name = None
+        two_id = None
+        two_name = None
+        winner = None
+    querry = 'SELECT ' +\
+        'fight.winner, ' +\
+        'combatant_one, ' +\
+        'combatant_two, ' +\
+        '(SELECT name FROM combatant ' +\
+        'WHERE fight.combatant_one = combatant.id), ' +\
+        '(SELECT name FROM combatant ' +\
+        'WHERE fight.combatant_two = combatant.id) ' +\
+        'FROM ' +\
+        'fight, '+\
+        'combatant;'
+    cursor.execute(querry)
+    results = cursor.fetchall()
+    battle_list = []
+    print(results)
+    
+    for battle in results:
+        new_fight = fight()
+        if str(battle[0]) == 'One':
+            new_fight.winner = battle[3]
+        elif str(battle[0]) == 'Two':
+            new_fight.winner = battle[4]
+        else:
+            new_fight.winner = 'Tie'
+        new_fight.one_id = battle[1]
+        new_fight.two_id = battle[2]
+        new_fight.one_name = battle[3]
+        new_fight.two_name = battle[4]
+        battle_list.append(new_fight)
+    print (battle_list)
+    con.commit()
+    con.close()
+    return render_template('battle.html', fights=battle_list)
 #    TODO
 
 
@@ -52,7 +92,7 @@ def combatants():
         new_guy.name = guy[1]
         new_guy.species=guy[2]
         combatant_list.append(new_guy)
-    print(combatant_list)
+#    print(combatant_list)
     con.commit()
     con.close()
     return render_template('combatants.html', combatants=combatant_list)
