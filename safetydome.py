@@ -145,33 +145,33 @@ def battles(battle_id = None, id1 = None, id2 = None):
             'combatant_one, ' +\
             'combatant_two, ' +\
             '(SELECT name FROM combatant ' +\
-            'WHERE fight.combatant_one = combatant.id), ' +\
+            ' WHERE fight.combatant_one = combatant.id), ' +\
             '(SELECT name FROM combatant ' +\
-            'WHERE fight.combatant_two = combatant.id), ' +\
+            ' WHERE fight.combatant_two = combatant.id), ' +\
             'fight.id, ' +\
             'fight.start, ' +\
             'fight.finish ' +\
             'FROM ' +\
-            'fight '+\
+            ' fight '+\
             'WHERE ' +\
-            'fight.id = ' + str(battle_id) + ';'
+            ' fight.id = ' + str(battle_id) + ';'
     elif( id1 and id2 ):
         querry = 'SELECT ' +\
             'fight.winner, ' +\
             'combatant_one, ' +\
             'combatant_two, ' +\
             '(SELECT name FROM combatant ' +\
-            'WHERE fight.combatant_one = combatant.id), ' +\
+            ' WHERE fight.combatant_one = combatant.id), ' +\
             '(SELECT name FROM combatant ' +\
-            'WHERE fight.combatant_two = combatant.id), ' +\
+            ' WHERE fight.combatant_two = combatant.id), ' +\
             'fight.id, ' +\
             'fight.start, ' +\
             'fight.finish ' +\
             'FROM ' +\
-            'fight '+\
+            ' fight '+\
             'WHERE ' +\
-            'combatant_one = ' + str(id1) + ' AND ' +\
-            'combatant_two = ' + str(id2) + ';'
+            ' combatant_one = ' + str(id1) + ' AND ' +\
+            ' combatant_two = ' + str(id2) + ';'
     cursor.execute(querry)
     results = cursor.fetchall()
     info = fight(results[0])
@@ -202,12 +202,12 @@ def battle(name = None):
         'combatant_one, ' +\
         'combatant_two, ' +\
         '(SELECT name FROM combatant ' +\
-        'WHERE fight.combatant_one = combatant.id), ' +\
+        ' WHERE fight.combatant_one = combatant.id), ' +\
         '(SELECT name FROM combatant ' +\
-        'WHERE fight.combatant_two = combatant.id), ' +\
+        ' WHERE fight.combatant_two = combatant.id), ' +\
         'fight.id ' +\
         'FROM ' +\
-        'fight;'
+        ' fight;'
     cursor.execute(querry)
     results = cursor.fetchall()
     battle_list = []
