@@ -25,11 +25,17 @@ def battle(name = None):
     con, cursor = connect()
     
     class fight():
-        one_id = None
-        one_name = None
-        two_id = None
-        two_name = None
-        winner = None
+        def __init__(self, args):
+            self.one_id = args[1]
+            self.two_id = args[2]
+            self.one_name = args[3]
+            self.two_name = args[4]
+            self.winner = 'Tie'
+            if str(args[0]) == 'One':
+                self.winner = self.one_name
+            elif str(args[0]) == 'Two':
+                self.winner = self.two_name
+            fight_id = args[5]
     querry = 'SELECT ' +\
         'fight.winner, ' +\
         'combatant_one, ' +\
@@ -37,29 +43,18 @@ def battle(name = None):
         '(SELECT name FROM combatant ' +\
         'WHERE fight.combatant_one = combatant.id), ' +\
         '(SELECT name FROM combatant ' +\
-        'WHERE fight.combatant_two = combatant.id) ' +\
+        'WHERE fight.combatant_two = combatant.id), ' +\
+        'fight.id ' +\
         'FROM ' +\
         'fight, '+\
         'combatant;'
     cursor.execute(querry)
     results = cursor.fetchall()
     battle_list = []
-    print(results)
     
     for battle in results:
-        new_fight = fight()
-        if str(battle[0]) == 'One':
-            new_fight.winner = battle[3]
-        elif str(battle[0]) == 'Two':
-            new_fight.winner = battle[4]
-        else:
-            new_fight.winner = 'Tie'
-        new_fight.one_id = battle[1]
-        new_fight.two_id = battle[2]
-        new_fight.one_name = battle[3]
-        new_fight.two_name = battle[4]
+        new_fight = fight(battle)
         battle_list.append(new_fight)
-    print (battle_list)
     con.commit()
     con.close()
     return render_template('battle.html', fights=battle_list)
@@ -72,9 +67,10 @@ def combatants():
     
 
     class combatant():
-        id = None
-        name = None
-        species = None
+        def __init__(self, args):
+            self.id = args[0]
+            self.name = args[1]
+            self.species = args[2]
     querry = 'SELECT ' +\
         'combatant.id, combatant.name, species.name ' +\
         'FROM ' +\
@@ -87,10 +83,7 @@ def combatants():
     combatant_list = []
     
     for guy in results:
-        new_guy = combatant()
-        new_guy.id=guy[0]
-        new_guy.name = guy[1]
-        new_guy.species=guy[2]
+        new_guy = combatant(guy)
         combatant_list.append(new_guy)
 #    print(combatant_list)
     con.commit()
