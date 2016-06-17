@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Safetydome Fighter</title>
+</head>
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th>Combatant</th>
+				<th>Species</th>
+				<th>Attack</th>
+				<th>Defense</th>
+				<th>Health</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for combatant in combatants %}
+			<tr>
+				<td>{{ combatant.name }}</td>
+				<td><a href= "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ">{{ combatant.species }}</a></td>
+				<td>{{ combatant.attack }}</td>
+				<td>{{ combatant.defense }}</td>
+				<td>{{ combatant.health }}</td>
+			</tr>
+			{% endfor %}
+			<tbody>
+	</table>
+
+</body>
+</html>
