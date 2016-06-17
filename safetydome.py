@@ -18,7 +18,55 @@ def index():
 @app.route('/combatant/')
 def combatant(name = None):
     con, cursor = connect()
-#    TODO
+    
+    class combatant():
+        def __init__(self, args):
+            self.name = args[0]
+            self.species = args[1]
+            self.attack = args[2]
+            self.defense = args[3]
+            self.health = args[4]
+    querry = 'SELECT ' +\
+        'combatant.name, ' +\
+        'species.name, ' +\
+        'combatant.plus_atk + ' +\
+        ' (SELECT ' +\
+        '  species.base_atk ' +\
+        ' FROM ' +\
+        '  species ' +\
+        ' WHERE ' +\
+        '  species.id = combatant.species_id), ' +\
+        'combatant.plus_dfn + ' +\
+        ' (SELECT ' +\
+        '  species.base_dfn ' +\
+        ' FROM ' +\
+        '  species ' +\
+        ' WHERE ' +\
+        '  species.id = combatant.species_id), ' +\
+        'combatant.plus_hp + ' +\
+        ' (SELECT ' +\
+        '  species.base_hp ' +\
+        ' FROM ' +\
+        '  species ' +\
+        ' WHERE ' +\
+        '  species.id = combatant.species_id) ' +\
+        'FROM ' +\
+        ' combatant, ' +\
+        ' species ' +\
+        'WHERE ' +\
+        " combatant.name = '" + str(name) + "' AND " +\
+        ' species.id = combatant.species_id;'
+    
+    cursor.execute(querry)
+    results = cursor.fetchall()
+    output = []
+    for data in results:
+        info = combatant(data)
+        output.append(info)
+    con.commit()
+    con.close()
+    return render_template('combatant.html', combatants=output)
+        
 
 @app.route('/results/')
 def results():
@@ -74,6 +122,7 @@ def results():
     
 #    TODO
 
+#TODO -- /battle /<id>-<id>
 @app.route('/battle/<battle_id>')
 def battles(battle_id = None):
     con, cursor = connect()
