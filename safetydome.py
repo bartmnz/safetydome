@@ -234,43 +234,46 @@ def battle(name=None):
 
 @app.route('/combatant/')
 def combatants():
-    try:
-        con, cursor = connect()
+    con, cursor = connect()
 
-        class combatant():
-            def __init__(self, args):
-                self.id = args[0]
-                self.name = args[1]
-                self.species = args[2]
-        querry = 'SELECT ' +\
-            ' combatant.id, ' +\
-            ' combatant.name, ' +\
-            ' species.name ' +\
-            'FROM ' +\
-            ' combatant, ' +\
-            ' species ' +\
-            'WHERE ' +\
-            ' combatant.species_id = species.id ' +\
-            'ORDER BY ' +\
-            ' combatant.name;'
-        cursor.execute(querry)
-        results = cursor.fetchall()
-        combatant_list = []
-        if results:
-            for guy in results:
-                new_guy = combatant(guy)
-                combatant_list.append(new_guy)
-    #    print(combatant_list)
-        con.commit()
-        con.close()
-        return render_template('combatants.html', combatants=combatant_list)
-    except:
-        "ERROR happened"
-
+    class combatant():
+         def __init__(self, args):
+            self.id = args[0]
+            self.name = args[1]
+            self.species = args[2]
+    querry = 'SELECT ' +\
+        ' combatant.id, ' +\
+        ' combatant.name, ' +\
+        ' species.name ' +\
+        'FROM ' +\
+        ' combatant, ' +\
+        ' species ' +\
+        'WHERE ' +\
+        ' combatant.species_id = species.id ' +\
+        'ORDER BY ' +\
+        ' combatant.name;'
+    cursor.execute(querry)
+    results = cursor.fetchall()
+    combatant_list = []
+    if results:
+        for guy in results:
+            new_guy = combatant(guy)
+            combatant_list.append(new_guy)
+    print(combatant_list)
+    con.commit()
+    con.close()
+    return render_template('combatants.html', combatants=combatant_list)
+    
 
 def connect():
-    connect_line = "dbname=safetydome user=sbartholomew"
-    con = psycopg2.connect(connect_line)
+    con = psycopg2.connect(
+        database='safetydome',
+        user='flask',
+        password='flask',
+        host='localhost'
+        )
+    if not con:
+        print("could not connect")
     cursor = con.cursor()
     return con, cursor
 
