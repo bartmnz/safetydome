@@ -29,29 +29,29 @@ def combatant(combatant_id=None):
                 self.defense = args[3]
                 self.health = args[4]
         querry = 'SELECT ' +\
-            'combatant.name, ' +\
-            'species.name, ' +\
-            'combatant.plus_atk + ' +\
-            ' (SELECT ' +\
-            '  species.base_atk ' +\
-            ' FROM ' +\
-            '  species ' +\
-            ' WHERE ' +\
-            '  species.id = combatant.species_id), ' +\
-            'combatant.plus_dfn + ' +\
-            ' (SELECT ' +\
-            '  species.base_dfn ' +\
-            ' FROM ' +\
-            '  species ' +\
-            ' WHERE ' +\
-            '  species.id = combatant.species_id), ' +\
-            'combatant.plus_hp + ' +\
-            ' (SELECT ' +\
-            '  species.base_hp ' +\
-            ' FROM ' +\
-            '  species ' +\
-            ' WHERE ' +\
-            '  species.id = combatant.species_id) ' +\
+            ' combatant.name, ' +\
+            ' species.name, ' +\
+            ' combatant.plus_atk + ' +\
+            '  (SELECT ' +\
+            '   species.base_atk ' +\
+            '  FROM ' +\
+            '   species ' +\
+            '  WHERE ' +\
+            '   species.id = combatant.species_id), ' +\
+            ' combatant.plus_dfn + ' +\
+            '  (SELECT ' +\
+            '   species.base_dfn ' +\
+            '  FROM ' +\
+            '   species ' +\
+            '  WHERE ' +\
+            '   species.id = combatant.species_id), ' +\
+            ' combatant.plus_hp + ' +\
+            '  (SELECT ' +\
+            '   species.base_hp ' +\
+            '  FROM ' +\
+            '   species ' +\
+            '  WHERE ' +\
+            '   species.id = combatant.species_id) ' +\
             'FROM ' +\
             ' combatant, ' +\
             ' species ' +\
@@ -83,9 +83,9 @@ def results():
                 self.id = args[1]
                 self.wins = args[2]
         querry = 'SELECT ' +\
-            'combatant.name, ' +\
-            'combatant.id, ' +\
-            'count(fight.combatant_one) ' +\
+            ' combatant.name, ' +\
+            ' combatant.id, ' +\
+            ' count(fight.combatant_one) ' +\
             'FROM ' +\
             ' (SELECT ' +\
             '   fight.combatant_one ' +\
@@ -145,16 +145,16 @@ def battles(battle_id=None, id1=None, id2=None):
                 self.end = args[7]
         if(battle_id):
             querry = 'SELECT ' +\
-                'fight.winner, ' +\
-                'combatant_one, ' +\
-                'combatant_two, ' +\
-                '(SELECT name FROM combatant ' +\
-                ' WHERE fight.combatant_one = combatant.id), ' +\
-                '(SELECT name FROM combatant ' +\
-                ' WHERE fight.combatant_two = combatant.id), ' +\
-                'fight.id, ' +\
-                'fight.start, ' +\
-                'fight.finish ' +\
+                ' fight.winner, ' +\
+                ' combatant_one, ' +\
+                ' combatant_two, ' +\
+                ' (SELECT name FROM combatant ' +\
+                '  WHERE fight.combatant_one = combatant.id), ' +\
+                ' (SELECT name FROM combatant ' +\
+                '  WHERE fight.combatant_two = combatant.id), ' +\
+                ' fight.id, ' +\
+                ' fight.start, ' +\
+                ' fight.finish ' +\
                 'FROM ' +\
                 ' fight ' +\
                 'WHERE ' +\
@@ -162,16 +162,16 @@ def battles(battle_id=None, id1=None, id2=None):
             cursor.execute(querry)  # no SQL injection
         elif(id1 and id2):
             querry = 'SELECT ' +\
-                'fight.winner, ' +\
-                'combatant_one, ' +\
-                'combatant_two, ' +\
-                '(SELECT name FROM combatant ' +\
-                ' WHERE fight.combatant_one = combatant.id), ' +\
-                '(SELECT name FROM combatant ' +\
-                ' WHERE fight.combatant_two = combatant.id), ' +\
-                'fight.id, ' +\
-                'fight.start, ' +\
-                'fight.finish ' +\
+                ' fight.winner, ' +\
+                ' combatant_one, ' +\
+                ' combatant_two, ' +\
+                ' (SELECT name FROM combatant ' +\
+                '  WHERE fight.combatant_one = combatant.id), ' +\
+                ' (SELECT name FROM combatant ' +\
+                '  WHERE fight.combatant_two = combatant.id), ' +\
+                ' fight.id, ' +\
+                ' fight.start, ' +\
+                ' fight.finish ' +\
                 'FROM ' +\
                 ' fight ' +\
                 'WHERE ' +\
@@ -208,14 +208,14 @@ def battle(name=None):
                     self.winner = self.two_name
                 self.fight_id = args[5]
         querry = 'SELECT ' +\
-            'fight.winner, ' +\
-            'combatant_one, ' +\
-            'combatant_two, ' +\
-            '(SELECT name FROM combatant ' +\
-            ' WHERE fight.combatant_one = combatant.id), ' +\
-            '(SELECT name FROM combatant ' +\
-            ' WHERE fight.combatant_two = combatant.id), ' +\
-            'fight.id ' +\
+            ' fight.winner, ' +\
+            ' combatant_one, ' +\
+            ' combatant_two, ' +\
+            ' (SELECT name FROM combatant ' +\
+            '  WHERE fight.combatant_one = combatant.id), ' +\
+            ' (SELECT name FROM combatant ' +\
+            '  WHERE fight.combatant_two = combatant.id), ' +\
+            ' fight.id ' +\
             'FROM ' +\
             ' fight;'
         cursor.execute(querry)
@@ -243,7 +243,9 @@ def combatants():
                 self.name = args[1]
                 self.species = args[2]
         querry = 'SELECT ' +\
-            'combatant.id, combatant.name, species.name ' +\
+            ' combatant.id, ' +\
+            ' combatant.name, ' +\
+            ' species.name ' +\
             'FROM ' +\
             ' combatant, ' +\
             ' species ' +\
