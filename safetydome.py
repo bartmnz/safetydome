@@ -15,7 +15,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/combatant/<combatant_id>')
+@app.route('/combatant/<int:combatant_id>')
 def combatant(combatant_id=None):
     con, cursor = connect()
 
@@ -54,9 +54,9 @@ def combatant(combatant_id=None):
         ' combatant, ' +\
         ' species ' +\
         'WHERE ' +\
-        " combatant.id = %s AND " +\
+        " combatant.id = '" + str(combatant_id) + "' AND " +\
         ' species.id = combatant.species_id;'
-    cursor.execute(querry, combatant_id) # use %s for no can has SQL injection
+    cursor.execute(querry) # use flask type conversion for no can has SQL injection
     results = cursor.fetchall()
     output = []
     for data in results:
@@ -117,8 +117,8 @@ def results():
     return render_template('results.html', combatants=output)
 
 
-@app.route('/battle/<id1>-<id2>')
-@app.route('/battle/<battle_id>')
+@app.route('/battle/<int:id1>-<int:id2>')
+@app.route('/battle/<int:battle_id>')
 def battles(battle_id=None, id1=None, id2=None):
     con, cursor = connect()
 
@@ -151,8 +151,8 @@ def battles(battle_id=None, id1=None, id2=None):
             'FROM ' +\
             ' fight ' +\
             'WHERE ' +\
-            ' fight.id = %s;'
-            cursor.execute(querry, battle_id) #no SQL injection
+            " fight.id = '" + str(battle_id) + "';"
+        cursor.execute(querry) #no SQL injection
     elif(id1 and id2):
         querry = 'SELECT ' +\
             'fight.winner, ' +\
@@ -168,9 +168,9 @@ def battles(battle_id=None, id1=None, id2=None):
             'FROM ' +\
             ' fight ' +\
             'WHERE ' +\
-            ' combatant_one = $s AND ' +\
-            ' combatant_two = %s;'
-            cursor.execute(querry, id1, id2) #no SQL injection
+            " combatant_one = '" + str(int1) + "' AND " +\
+            " combatant_two = '" + str(int2) + "';"
+        cursor.execute(querry, id1, id2) #no SQL injection
     results = cursor.fetchall()
     info = fight(results[0])
     fights = [info]
